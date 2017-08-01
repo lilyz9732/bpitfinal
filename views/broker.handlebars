@@ -1,10 +1,10 @@
-<!DOCTYPE html>
 <html>
     <h2 class="page-header">Broker</h2>
-  <head>
-    <title></title>
-    <link rel="stylesheet" href="/stylesheets/style.css">
-  </head>
+    {{#if errors}}
+      {{#each errors}}
+        <div class="alert alert-danger">{{msg}}</div>
+      {{/each}}
+    {{/if}}
   <body>
     <h1></h1>
     <!-- Wrapper-->
@@ -26,17 +26,17 @@
       </div>
       <!-- /USER LIST-->
       <!-- ADD USER-->
-      <h2>Add Account & Stocks</h2>
+      <h2>Add Collateral </h2>
       <div id="addAccount">
-        <fieldset>
-          <input id="firstName" type="text" placeholder="First Name">
-          <input id="lastName" type="text" placeholder="Last Name"><br>
-          <input id="Stock1" type="text" placeholder="Stock 1">
-          <input id="quantity1" type="text" placeholder="No. of Shares"><br>
-          <input id="Stock2" type="text" placeholder="Stock 2">
-          <input id="quantity2" type="text" placeholder="No. of Shares"><br>
-          <button id="btnAddAccount">Add Account</button>
-        </fieldset>
+        <form method="post" action="/broker" >
+        <input type="text" class="form-control" placeholder="firstName" name="firstName">
+        <input type="text" class="form-control" placeholder="lastName" name="lastName">
+        <input type="text" class="form-control" placeholder="Stock1" name="Stock1">
+        <input type="text" class="form-control" placeholder="quantity1" name="quantity1">
+        <input type="text" class="form-control" placeholder="Stock2" name="Stock2">
+        <input type="text" class="form-control" placeholder="quantity2" name="quantity2">
+        <button id="btnAddAccount">Add Account</button>
+        </form>
       </div>
       <!-- /ADD USER-->
     </div>

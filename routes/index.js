@@ -1,11 +1,12 @@
 var express = require('express');
 var router = express.Router();
-const chain = require('chain-sdk')
 var googleStocks = require('google-stocks');
+const chain = require('chain-sdk');
 // var fetchQuotes = require('yahoo-finance-quotes');
-const client = new chain.Client()
+const client = new chain.Client();
+const signer = new chain.HsmSigner()
+let aliceKey
 
-let _signer
 // Get Homepage
 router.get('/', ensureAuthenticated, function(req, res){
 	res.render('login');
@@ -27,54 +28,48 @@ router.get('/broker', function(req, res){
 });
 
 router.post('/broker', function(req, res){
-	console.log("hello")
-  Promise.resolve().then(() => {
+  	Promise.all([
+    
     // snippet create-key
-    const keyPromise = client.mockHsm.keys.create()
-    // endsnippet
-    return keyPromise
-    }).then(key => {
+    client.mockHsm.keys.create()
+
+    ]).then(keys => {
+    aliceKey = keys[0].xpub,
     // snippet signer-add-key
-    const signer = new chain.HsmSigner()
-    signer.addKey(key.xpub, client.mockHsm.signerConnection)
+    signer.addKey(aliceKey, client.mockHsm.signerConnection)
     // endsnippet
 
-    _signer = signer
-    return key
-    }).then(key => {
+    }).then(() => Promise.all([
 
     // snippet create-asset: STOCK 1
-    const goldPromise = client.assets.create({
-      alias: (req.body.Stock1).replace(/\s+/g, ''),
-      rootXpubs: [key.xpub],
-      quorum: 1,
-    })
+    client.assets.create({
+    	alias: req.body.Stock1,
+    	rootXpubs: [aliceKey],
+    	quorum: 1}),
     // endsnippet
 
     // snippet create-asset: STOCK 2
-    const silverPromise = client.assets.create({
-      alias: (req.body.Stock2).replace(/\s+/g, ''),
-      rootXpubs: [key.xpub],
-      quorum: 1,
-    })
+    client.assets.create({
+    	alias: req.body.Stock2,
+    	rootXpubs: [aliceKey],
+    	quorum: 1}),
+    
     //snippet create-asset: NameTotal (To store total collateral)
-    const totalPromise = client.assets.create({
-      alias: req.body.firstName + req.body.lastName+"Total",
-      rootXpubs: [key.xpub],
+    client.assets.create({
+      alias: 'Loan Value',
+      rootXpubs: [aliceKey],
       quorum: 1,
-    })
+    }),
     // endsnippet
+    
     // snippet create-account-alice: FIRST & LAST NAME
-    const alicePromise = client.accounts.create({
+    client.accounts.create({
       alias: req.body.firstName + " " + req.body.lastName,
-      rootXpubs: [key.xpub],
+      rootXpubs: [aliceKey],
       quorum: 1
     })
     // endsnippet
-
-    return Promise.all([goldPromise, silverPromise, alicePromise,totalPromise]);
-    res.send({msg:''});
-    }).then( t => {
+])).then(() => 
 
     //TRANSACTIONS:
     //Putting the first stock on the ledger
@@ -88,12 +83,10 @@ router.post('/broker', function(req, res){
             assetAlias: (req.body.Stock1).replace(/\s+/g, ''),
             amount: parseInt(req.body.quantity1)
         })
-    }).then(issuance => {
-        return _signer.sign(issuance)
-    }).then(signed => {
-        return client.transactions.submit(signed)
     })
-  }).then( v => {
+    .then(issuance => signer.sign(issuance))
+    .then(signed => client.transactions.submit(signed))
+    ).then(() => {
 
     //Putting the second stock on the ledger
     client.transactions.build(builder => {
@@ -106,43 +99,42 @@ router.post('/broker', function(req, res){
             assetAlias: (req.body.Stock2).replace(/\s+/g, ''),
             amount: parseInt(req.body.quantity2)
         })
-    }).then(issuance => {
-        return _signer.sign(issuance)
-    }).then(signed => {
-        return client.transactions.submit(signed)
     })
-  }).then( f => {
+    .then(issuance => signer.sign(issuance))
+    .then(signed => client.transactions.submit(signed))
+  // }).then( f => {
 
-    googleStocks([(req.body.Stock1).replace(/\s+/g, '')], function(error, data) {
-    		var Stock1Total=data[0].l * req.body.quantity1;
-  	});
-    //var Stock1Total=data[0].l * req.body.quantity1;
+  //   googleStocks([(req.body.Stock1).replace(/\s+/g, '')], function(error, data) {
+  //   		var Stock1Total=data[0].l * req.body.quantity1;
+  // 	});
+  //   //var Stock1Total=data[0].l * req.body.quantity1;
 
-    googleStocks([(req.body.Stock2).replace(/\s+/g, '')], function(error, data) {
-    		var Stock2Total=data[0].l * req.body.quantity2;
-  	});
+  //   googleStocks([(req.body.Stock2).replace(/\s+/g, '')], function(error, data) {
+  //   		var Stock2Total=data[0].l * req.body.quantity2;
+  // 	});
 
-    //Putting the total stock amount on the ledger
-    client.transactions.build(builder => {
-        builder.issue({
-            assetAlias: req.body.firstName + req.body.lastName+"Total",
-            amount: Stock2Total+Stock1Total
-        })
-        builder.controlWithAccount({
-            accountAlias: req.body.firstName + " " + req.body.lastName,
-            assetAlias: req.body.firstName + req.body.lastName+"Total",
-            amount: Stock2Total+Stock1Total
-        })
-    }).then(issuance => {
-        return _signer.sign(issuance)
-    }).then(signed => {
-        return client.transactions.submit(signed)
-    })
-  }).catch(err =>
-  process.nextTick(() => {throw err }),
-  res.send({msg:err})
+  //   //Putting the total stock amount on the ledger
+  //   client.transactions.build(builder => {
+  //       builder.issue({
+  //           assetAlias: req.body.firstName + req.body.lastName+"Total",
+  //           amount: Stock2Total+Stock1Total
+  //       })
+  //       builder.controlWithAccount({
+  //           accountAlias: req.body.firstName + " " + req.body.lastName,
+  //           assetAlias: req.body.firstName + req.body.lastName+"Total",
+  //           amount: Stock2Total+Stock1Total
+  //       })
+  //   })
+  // .then(issuance => {
+  //       return _signer.sign(issuance)
+  //   }).then(signed => {
+  //       return client.transactions.submit(signed)
+  //   })
+  // })
+  .catch(err =>
+  process.nextTick(() => {throw err })
   )
-});
+})});
 
 function ensureAuthenticated(req, res, next){
 	if(req.isAuthenticated()){
