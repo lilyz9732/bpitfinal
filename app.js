@@ -65,6 +65,7 @@ app.use(expressValidator({
 // Connect Flash
 app.use(flash());
 
+
 // Global Vars
 app.use(function (req, res, next) {
   res.locals.success_msg = req.flash('success_msg');
@@ -74,8 +75,7 @@ app.use(function (req, res, next) {
   next();
 });
 
-
-
+app.use(express.static('views/images')); 
 app.use('/', routes);
 app.use('/users', users);
 

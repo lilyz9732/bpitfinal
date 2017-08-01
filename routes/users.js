@@ -25,6 +25,23 @@ router.get('/login', function(req, res){
 	res.render('login');
 });
 
+// Agreement
+router.get('/agreement', function(req, res) {
+	res.render('agreement');
+})
+
+router.post('/agreement', function(req, res) {
+	req.checkBody('signature', 'Signature is required').notEmpty();
+	var errors = req.validationErrors();
+	if(errors){
+		res.render('agreement',{
+			errors:errors
+		});
+	} else {
+		req.flash('success_msg', 'You are registered and can now login');
+		res.redirect('/users/login');
+}})
+
 // Register User
 router.post('/register', function(req, res){
 	var name = req.body.name;
@@ -63,9 +80,7 @@ router.post('/register', function(req, res){
 			console.log(user);
 		});
 
-		req.flash('success_msg', 'You are registered and can now login');
-
-		res.redirect('/users/login');
+		res.redirect('/users/agreement');
 	}
 });
 
