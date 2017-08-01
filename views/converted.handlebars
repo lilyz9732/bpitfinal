@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title></title>
+    <link rel="stylesheet" href="/stylesheets/style.css">
+  </head>
+  <body>
+    <h1></h1>
+    <p>Welcome to our test</p>
+    <!-- Wrapper-->
+    <div id="wrapper">
+      <!-- USER INFO-->
+      <div id="accountInfo">
+        <h2>Account Info</h2>
+        <p><strong>Name:</strong> <span id='firstName'></span>
+           <span id='lastName'></span><br><strong>Stock 1:</strong> <span id='Stock1'></span><br><strong>Stock 2:</strong> <span id='Stock2'></span>
+        </p>
+      </div>
+      <!-- /USER INFO-->
+      <!-- USER LIST-->
+      <h2>Account List</h2>
+      <div id="accountList">
+        <table>
+          <thead>
+            <th>First Name</th>
+            <th>Last Name</th>
+            <th>Stock 1</th>
+            <th>Quantity 1</th>
+            <th>Stock 2</th>
+            <th>Quantity 2</th>
+            <th>Delete?</th>
+          </thead>
+          <tbody></tbody>
+        </table>
+      </div>
+      <!-- /USER LIST-->
+      <!-- ADD USER-->
+      <h2>Add Account & Stocks</h2>
+      <div id="addAccount">
+        <fieldset>
+          <input id="firstName" type="text" placeholder="First Name">
+          <input id="lastName" type="text" placeholder="Last Name"><br>
+          <input id="Stock1" type="text" placeholder="Stock 1">
+          <input id="quantity1" type="text" placeholder="No. of Shares"><br>
+          <input id="Stock2" type="text" placeholder="Stock 2">
+          <input id="quantity2" type="text" placeholder="No. of Shares"><br>
+          <button id="btnAddAccount">Add Account</button>
+        </fieldset>
+      </div>
+      <!-- /ADD USER-->
+    </div>
+    <!-- /WRAPPER-->
+    <script src="http://ajax.googleapis.com/ajax/libs/jquery/2.0.3/jquery.min.js"></script>
+    <script src="/javascripts/global.js"></script>
+  </body>
+</html>
