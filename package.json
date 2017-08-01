@@ -12,6 +12,7 @@
   "dependencies": {
     "bcryptjs": "*",
     "body-parser": "*",
+    "chain-sdk": "^1.2.1",
     "connect-flash": "*",
     "cookie-parser": "^1.4.1",
     "express": "*",
@@ -19,6 +20,7 @@
     "express-messages": "*",
     "express-session": "*",
     "express-validator": "*",
+    "google-stocks": "^1.0.1",
     "mongodb": "*",
     "mongoose": "*",
     "passport": "*",
