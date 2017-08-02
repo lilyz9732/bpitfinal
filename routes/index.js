@@ -5,7 +5,7 @@ const chain = require('chain-sdk');
 // var fetchQuotes = require('yahoo-finance-quotes');
 const client = new chain.Client();
 const signer = new chain.HsmSigner()
-let aliceKey
+let aliceKey, assetkey
 
 // Get Homepage
 router.get('/', ensureAuthenticated, function(req, res){
@@ -13,18 +13,18 @@ router.get('/', ensureAuthenticated, function(req, res){
 });
 
 // Client
-router.get('/client', function(req, res){
-	res.render('client');
+router.get('/clientagreement', function(req, res){
+	res.render('clientagreement');
 });
 
 // Lender 
-router.get('/lender', function(req, res){
-	res.render('lender');
+router.get('/lenderagreement', function(req, res){
+	res.render('lenderagreement');
 });
 
 // Broker 
-router.get('/broker', function(req, res){
-	res.render('broker');
+router.get('/brokeragreement', function(req, res){
+	res.render('brokeragreement');
 });
 
 router.post('/broker', function(req, res){

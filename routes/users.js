@@ -1,3 +1,4 @@
+const chain = require('chain-sdk');
 var express = require('express');
 var router = express.Router();
 var passport = require('passport');
@@ -7,6 +8,8 @@ var User = require('../models/user');
 // Retrieve
 var MongoClient = require('mongodb').MongoClient;
 var userinfo;
+const client = new chain.Client();
+const signer = new chain.HsmSigner()
 
 // // Connect to the db
 // MongoClient.connect("mongodb://localhost:27017/exampleDb", function(err, db) {
@@ -30,17 +33,61 @@ router.get('/agreement', function(req, res) {
 	res.render('agreement');
 })
 
-router.post('/agreement', function(req, res) {
-	req.checkBody('signature', 'Signature is required').notEmpty();
-	var errors = req.validationErrors();
-	if(errors){
-		res.render('agreement',{
-			errors:errors
-		});
-	} else {
-		req.flash('success_msg', 'You are registered and can now login');
-		res.redirect('/users/login');
-}})
+// Broker Agreement Page
+router.post('/brokeragreement', function(req, res){
+	Promise.all([
+  client.mockHsm.keys.create(),
+]).then(keys => {
+  assetKey = keys[0].xpub
+
+  signer.addKey(assetKey, client.mockHsm.signerConnection)
+}).then(() => Promise.all([
+  client.accounts.create({
+    alias: req.body.signature,
+    rootXpubs: [assetKey],
+    quorum: 1,
+  }),
+
+  // snippet create-asset-acme-common
+  client.assets.create({
+    alias: req.body.signature + ' Control Agreement',
+    rootXpubs: [assetKey],
+    quorum: 1,
+    tags: {
+      broker: req.body.signature,
+      client: req.body.clientname,
+      lender: req.body.lendingpartner,
+    },
+  })
+  // endsnippet
+])).then(() =>
+
+    //TRANSACTIONS:
+    //Putting the first stock on the ledger
+    client.transactions.build(builder => {
+        builder.issue({
+            assetAlias: req.body.signature + ' Control Agreement',
+            amount: 1
+        })
+        builder.controlWithAccount({
+            accountAlias: req.body.signature,
+            assetAlias: req.body.signature + ' Control Agreement',
+            amount: 1,
+            reference_data: {
+            	broker: req.body.signature,
+		      	client: req.body.clientname,
+		      	lender: req.body.lendingpartner,
+            }
+        })
+    })
+    .then(issuance => signer.sign(issuance))
+    .then(signed => client.transactions.submit(signed))
+    .catch(err =>
+  process.nextTick(() => {throw err })
+  ));
+	req.flash('success_msg', 'You have issued a Control Agreement to ' + req.body.lendingpartner + ' and ' + req.body.clientname);
+	res.redirect('/users/login')
+})
 
 // Register User
 router.post('/register', function(req, res){
@@ -79,8 +126,8 @@ router.post('/register', function(req, res){
 			if(err) throw err;
 			console.log(user);
 		});
-
-		res.redirect('/users/agreement');
+		req.flash('success_msg', 'You are registered and can now login');
+		res.redirect('/users/login');
 	}
 });
 
@@ -123,17 +170,17 @@ router.post('/login', passport.authenticate('local', {failureRedirect:'/users/lo
 	if(nuser.usertype == "Client"){
 		console.log("client")
 		passport.authenticate('local', {successRedirect: '/client', failureRedirect:'/users/login',failureFlash: true}),
-		res.redirect('/client');
+		res.redirect('/clientagreement');
 	}
 	else if(nuser.usertype == "Lender"){
 		console.log("lender")
 		passport.authenticate('local', {successRedirect: '/lender', failureRedirect:'/users/login',failureFlash: true}),
-		res.redirect('/lender');
+		res.redirect('/lenderagreement');
 	}
 	else if (nuser.usertype == "Broker"){
 		console.log("broker")
 		passport.authenticate('local', {successRedirect: '/broker', failureRedirect:'/users/login',failureFlash: true}),
-		res.redirect('/broker');
+		res.redirect('/brokeragreement');
 	}
 	else {
 		res.redirect('/');

@@ -1,0 +1,23 @@
+<h2 class="page-header">Agreement</h2>
+{{#if errors}}
+      {{#each errors}}
+        <div class="alert alert-danger">{{msg}}</div>
+      {{/each}}
+{{/if}}
+{{!-- <img src="agreement.jpg" alt="agreement" style="width:304px;height:228px;"> --}}
+<img src="agreement.jpg" alt=""/>
+<form method="post" action="users/brokeragreement">
+	<div class="form-group">
+    <label>Insert Lending Partner</label>
+    <input type="text" class="form-control" placeholder="Lending Partner" name="lendingpartner">
+  </div>
+	<div class="form-group">
+    <label>Insert Client Name</label>
+    <input type="text" class="form-control" placeholder="Client Name" name="clientname">
+  </div>
+   <div class="form-group">
+    <label>Signing this constitutes as an physical signature</label>
+    <input type="text" class="form-control" placeholder="Signature" name="signature">
+  </div>
+  <button type="submit" class="btn btn-default">Issue Agreement</button>
+</form>
