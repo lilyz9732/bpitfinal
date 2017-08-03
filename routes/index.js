@@ -13,19 +13,19 @@ router.get('/', ensureAuthenticated, function(req, res){
 });
 
 // Client
-router.get('/clientagreement', function(req, res){
-	res.render('clientagreement');
-});
+router.get('/clientindex', function(req, res){
+	res.render('clientindex');
+})
 
 // Lender 
-router.get('/lenderagreement', function(req, res){
-	res.render('lenderagreement');
-});
+router.get('/lenderindex', function(req, res){
+	res.render('lenderindex');
+})
 
 // Broker 
-router.get('/brokeragreement', function(req, res){
-	res.render('brokeragreement');
-});
+router.get('/brokerindex', function(req, res){
+	res.render('brokerindex');
+})
 
 function ensureAuthenticated(req, res, next){
 	if(req.isAuthenticated()){

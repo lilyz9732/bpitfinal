@@ -18,16 +18,6 @@ router.get('/register', function(req, res){
 	res.render('register');
 });
 
-// Login
-router.get('/login', function(req, res){
-	res.render('login');
-});
-
-// Agreement
-router.get('/agreement', function(req, res) {
-	res.render('agreement');
-})
-
 // Register User
 router.post('/register', function(req, res){
 	var name = req.body.name;
@@ -99,6 +89,11 @@ passport.deserializeUser(function(id, done) {
   });
 });
 
+// Login
+router.get('/login', function(req, res){
+	res.render('login');
+});
+
 // POST to login
 router.post('/login', passport.authenticate('local', {failureRedirect:'/users/login',failureFlash: true}),
 	function(req, res) {
@@ -110,29 +105,34 @@ router.post('/login', passport.authenticate('local', {failureRedirect:'/users/lo
 	if(nuser.usertype == "Client"){
 		console.log("client")
 		passport.authenticate('local', {successRedirect: '/clientagreement', failureRedirect:'/users/login',failureFlash: true}),
-		res.redirect('/clientagreement');
+		res.redirect('/clientindex');
 	}
 	else if(nuser.usertype == "Lender"){
 		console.log("lender")
 		passport.authenticate('local', {successRedirect: '/lenderagreement', failureRedirect:'/users/login',failureFlash: true}),
-		res.redirect('/lenderagreement');
+		res.redirect('/lenderindex');
 	}
 	else if (nuser.usertype == "Broker"){
 		console.log("broker")
 		passport.authenticate('local', {successRedirect: '/brokerindex', failureRedirect:'/users/login',failureFlash: true}),
-		 res.render('users/brokerindex', {
-		    username: req.body.username
-		    }, function(err, html){
-		      if (err) { 
-		        console.err("ERR", err) 
-		        // An error occurred, stop execution and return 500
-		        return res.status(500).send();
-		      }
-		      // Return the HTML of the View
-		      return res.send(html);
-		    })
-			}
-})});
+		res.redirect('/brokerindex')
+		 // res.render('users/brokerindex', {
+		 //    username: req.body.username
+		 //    }, function(err, html){
+		 //      if (err) { 
+		 //        console.err("ERR", err) 
+		 //        // An error occurred, stop execution and return 500
+		 //        return res.status(500).send();
+		 //      }
+		 //      // Return the HTML of the View
+		 //      return res.send(html);
+		 //    })
+			// }
+}})});
+
+router.get('/brokeragreement', function(req, res){
+	res.render('brokeragreement');
+});
 
 // POST to Broker Agreement Page
 router.post('/brokeragreement', function(req, res){
@@ -181,8 +181,12 @@ router.post('/brokeragreement', function(req, res){
   process.nextTick(() => {throw err })
   ));
 	req.flash('success_msg', 'You have issued a Control Agreement to ' + req.body.lendingpartner + ' and ' + req.body.clientname);
-	res.redirect('/users/login')
+	res.redirect('/brokerindex')
 })
+
+router.get('/clientagreement', function(req, res){
+	res.render('clientagreement');
+});
 
 // POST to client agreement page
 router.post('/clientagreement', function(req, res){
@@ -229,8 +233,12 @@ router.post('/clientagreement', function(req, res){
   process.nextTick(() => {throw err })
   ));
 	req.flash('success_msg', 'You have signed your Control Agreement') ;
-	res.redirect('/users/login')
+	res.redirect('/clientindex')
 })
+
+router.get('/lenderagreement', function(req, res){
+	res.render('lenderagreement');
+});
 
 // POST to lender agreement page
 router.post('/lenderagreement', function(req, res){
@@ -277,11 +285,15 @@ router.post('/lenderagreement', function(req, res){
   process.nextTick(() => {throw err })
   ));
 	req.flash('success_msg', 'You have signed your Control Agreement') ;
-	res.redirect('/users/login')
+	res.redirect('/lenderindex')
 })
 
-router.get('/brokerindex', function(req, res){
-	res.render('brokerindex');
+router.post('/clientindex', function(req, res){
+	res.redirect('clientindex');
+})
+
+router.post('/lenderindex', function(req, res){
+	res.redirect('lenderindex');
 })
 
 router.post('/brokerindex', function(req, res){

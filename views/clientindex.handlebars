@@ -1,10 +1,10 @@
 <html>
 <nav>
   <ul class="nav nav-pills pull-right">
-      <li role="presentation"><a href="/users/brokeragreement">Control Agreement</a></li>
+      <li role="presentation"><a href="/users/clientagreement">Control Agreement</a></li>
   </ul>
 </nav>
-    <h2 class="page-header">Broker Dashboard</h2>
+    <h2 class="page-header">Client Dashboard</h2>
     {{#if errors}}
       {{#each errors}}
         <div class="alert alert-danger">{{msg}}</div>
@@ -31,18 +31,6 @@
       </div>
       <!-- /USER LIST-->
       <!-- ADD USER-->
-      <h2>Add Collateral </h2>
-      <div id="addAccount">
-        <form method="post" action="/brokerindex" >
-        <input type="text" class="form-control" placeholder="firstName" name="firstName">
-        <input type="text" class="form-control" placeholder="lastName" name="lastName">
-        <input type="text" class="form-control" placeholder="Stock1" name="Stock1">
-        <input type="text" class="form-control" placeholder="quantity1" name="quantity1">
-        <input type="text" class="form-control" placeholder="Stock2" name="Stock2">
-        <input type="text" class="form-control" placeholder="quantity2" name="quantity2">
-        <button id="btnAddAccount">Add Asset</button>
-        </form>
-      </div>
       <!-- /ADD USER-->
     </div>
     <!-- /WRAPPER-->

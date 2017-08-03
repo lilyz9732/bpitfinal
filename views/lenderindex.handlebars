@@ -1,0 +1,37 @@
+<html>
+<nav>
+  <ul class="nav nav-pills pull-right">
+      <li role="presentation"><a href="/users/lenderagreement">Control Agreement</a></li>
+  </ul>
+</nav>
+    <h2 class="page-header">Lender Dashboard</h2>
+    {{#if errors}}
+      {{#each errors}}
+        <div class="alert alert-danger">{{msg}}</div>
+      {{/each}}
+    {{/if}}
+  <body>
+    <h1></h1>
+    <!-- Wrapper-->
+    <div id="wrapper">
+      <!-- USER INFO-->
+      <!-- /USER INFO-->
+      <!-- USER LIST-->
+      <h2>Account List</h2>
+      <div id="accountList">
+        <table>
+          <thead>
+            <th>username</th>
+            <th>Last Name</th>
+            <th>Loan Amount</th>
+            <th>Wealth Collateral</th>
+          </thead>
+          <tbody></tbody>
+        </table>
+      <!-- /ADD USER-->
+    </div>
+    <!-- /WRAPPER-->
+    <script src="http://ajax.googleapis.com/ajax/libs/jquery/2.0.3/jquery.min.js"></script>
+    <script src="/javascripts/global.js"></script>
+  </body>
+</html>
