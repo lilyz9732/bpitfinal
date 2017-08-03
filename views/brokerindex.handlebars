@@ -17,7 +17,26 @@
       <!-- USER INFO-->
       <!-- /USER INFO-->
       <!-- USER LIST-->
-      <h3>Account List</h3>
+      <div class = "form-group col-xs-6">
+        <h3>Account List</h3>
+      </div>
+      <div class = "form-group col-xs-6">
+      <h3>Insert Collateral File</h3>
+        <form id      =  "uploadForm"
+              enctype   =  "multipart/form-data"
+              action    =  "upload"
+              method    =  "post"
+          >
+        <input type="file" name="file" />
+        <input type="submit" value="Upload" name="submit">
+        </form>
+      </div>
+     <!--  <form method="post" action="/users/underwater" >
+        <div align = "center">
+        <button id="underwater">Underwater?</button>
+        </div>
+      </form> -->
+
       <div id="accountList">
         <table style = "width: 100%" >
         <style>

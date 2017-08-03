@@ -25,6 +25,9 @@
     "mongoose": "*",
     "passport": "*",
     "passport-http": "*",
-    "passport-local": "*"
+    "passport-local": "*",
+    "multer": "1.1.0",
+    "xls-to-json-lc": "0.3.4",
+    "xlsx-to-json-lc": "0.4.1"
   }
 }

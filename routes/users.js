@@ -188,6 +188,10 @@ router.get('/clientagreement', function(req, res){
 	res.render('clientagreement');
 });
 
+router.post('/underwater', function(req, res){
+	
+})
+
 // POST to client agreement page
 router.post('/clientagreement', function(req, res){
 	Promise.all([
