@@ -1,4 +1,9 @@
 <html>
+<nav>
+  <ul class="nav nav-pills pull-right">
+      <li role="presentation"><a href="/users/brokeragreement">Control Agreement</a></li>
+  </ul>
+</nav>
     <h2 class="page-header">Broker</h2>
     {{#if errors}}
       {{#each errors}}
@@ -16,7 +21,7 @@
       <div id="accountList">
         <table>
           <thead>
-            <th>First Name</th>
+            <th>username</th>
             <th>Last Name</th>
             <th>Loan Amount</th>
             <th>Wealth Collateral</th>
@@ -28,14 +33,14 @@
       <!-- ADD USER-->
       <h2>Add Collateral </h2>
       <div id="addAccount">
-        <form method="post" action="/broker" >
+        <form method="post" action="/brokerindex" >
         <input type="text" class="form-control" placeholder="firstName" name="firstName">
         <input type="text" class="form-control" placeholder="lastName" name="lastName">
         <input type="text" class="form-control" placeholder="Stock1" name="Stock1">
         <input type="text" class="form-control" placeholder="quantity1" name="quantity1">
         <input type="text" class="form-control" placeholder="Stock2" name="Stock2">
         <input type="text" class="form-control" placeholder="quantity2" name="quantity2">
-        <button id="btnAddAccount">Add Account</button>
+        <button id="btnAddAccount">Add Asset</button>
         </form>
       </div>
       <!-- /ADD USER-->

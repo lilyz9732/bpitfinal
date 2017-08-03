@@ -76,7 +76,6 @@ app.use(function (req, res, next) {
   next();
 });
 
-app.use(express.static('views/images')); 
 app.use('/', routes);
 app.use('/users', users);
 

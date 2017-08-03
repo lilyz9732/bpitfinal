@@ -8,15 +8,10 @@ var User = require('../models/user');
 // Retrieve
 var MongoClient = require('mongodb').MongoClient;
 var userinfo;
+
 const client = new chain.Client();
 const signer = new chain.HsmSigner()
-
-// // Connect to the db
-// MongoClient.connect("mongodb://localhost:27017/exampleDb", function(err, db) {
-//   if(!err) {
-//     console.log("We are connected");
-//   }
-// });
+var name = "";
 
 // Register
 router.get('/register', function(req, res){
@@ -31,62 +26,6 @@ router.get('/login', function(req, res){
 // Agreement
 router.get('/agreement', function(req, res) {
 	res.render('agreement');
-})
-
-// Broker Agreement Page
-router.post('/brokeragreement', function(req, res){
-	Promise.all([
-  client.mockHsm.keys.create(),
-]).then(keys => {
-  assetKey = keys[0].xpub
-
-  signer.addKey(assetKey, client.mockHsm.signerConnection)
-}).then(() => Promise.all([
-  client.accounts.create({
-    alias: req.body.signature,
-    rootXpubs: [assetKey],
-    quorum: 1,
-  }),
-
-  // snippet create-asset-acme-common
-  client.assets.create({
-    alias: req.body.signature + ' Control Agreement',
-    rootXpubs: [assetKey],
-    quorum: 1,
-    tags: {
-      broker: req.body.signature,
-      client: req.body.clientname,
-      lender: req.body.lendingpartner,
-    },
-  })
-  // endsnippet
-])).then(() =>
-
-    //TRANSACTIONS:
-    //Putting the first stock on the ledger
-    client.transactions.build(builder => {
-        builder.issue({
-            assetAlias: req.body.signature + ' Control Agreement',
-            amount: 1
-        })
-        builder.controlWithAccount({
-            accountAlias: req.body.signature,
-            assetAlias: req.body.signature + ' Control Agreement',
-            amount: 1,
-            reference_data: {
-            	broker: req.body.signature,
-		      	client: req.body.clientname,
-		      	lender: req.body.lendingpartner,
-            }
-        })
-    })
-    .then(issuance => signer.sign(issuance))
-    .then(signed => client.transactions.submit(signed))
-    .catch(err =>
-  process.nextTick(() => {throw err })
-  ));
-	req.flash('success_msg', 'You have issued a Control Agreement to ' + req.body.lendingpartner + ' and ' + req.body.clientname);
-	res.redirect('/users/login')
 })
 
 // Register User
@@ -160,6 +99,7 @@ passport.deserializeUser(function(id, done) {
   });
 });
 
+// POST to login
 router.post('/login', passport.authenticate('local', {failureRedirect:'/users/login',failureFlash: true}),
 	function(req, res) {
 	User.getUserByUsername(req.body.username, function(err, nuser) {
@@ -169,24 +109,291 @@ router.post('/login', passport.authenticate('local', {failureRedirect:'/users/lo
 	}
 	if(nuser.usertype == "Client"){
 		console.log("client")
-		passport.authenticate('local', {successRedirect: '/client', failureRedirect:'/users/login',failureFlash: true}),
+		passport.authenticate('local', {successRedirect: '/clientagreement', failureRedirect:'/users/login',failureFlash: true}),
 		res.redirect('/clientagreement');
 	}
 	else if(nuser.usertype == "Lender"){
 		console.log("lender")
-		passport.authenticate('local', {successRedirect: '/lender', failureRedirect:'/users/login',failureFlash: true}),
+		passport.authenticate('local', {successRedirect: '/lenderagreement', failureRedirect:'/users/login',failureFlash: true}),
 		res.redirect('/lenderagreement');
 	}
 	else if (nuser.usertype == "Broker"){
 		console.log("broker")
-		passport.authenticate('local', {successRedirect: '/broker', failureRedirect:'/users/login',failureFlash: true}),
-		res.redirect('/brokeragreement');
-	}
-	else {
-		res.redirect('/');
-		console.log("err");
-	}})
-});
+		passport.authenticate('local', {successRedirect: '/brokerindex', failureRedirect:'/users/login',failureFlash: true}),
+		 res.render('users/brokerindex', {
+		    username: req.body.username
+		    }, function(err, html){
+		      if (err) { 
+		        console.err("ERR", err) 
+		        // An error occurred, stop execution and return 500
+		        return res.status(500).send();
+		      }
+		      // Return the HTML of the View
+		      return res.send(html);
+		    })
+			}
+})});
+
+// POST to Broker Agreement Page
+router.post('/brokeragreement', function(req, res){
+	Promise.all([
+  client.mockHsm.keys.create(),
+]).then(keys => {
+  assetKey = keys[0].xpub
+
+  signer.addKey(assetKey, client.mockHsm.signerConnection)
+}).then(() => Promise.all([
+  client.accounts.create({
+    alias: req.body.signature,
+    rootXpubs: [assetKey],
+    quorum: 1,
+  }),
+
+  // create control agreement
+  client.assets.create({
+    alias: req.body.signature + ' Control Agreement',
+    rootXpubs: [assetKey],
+    quorum: 1,
+  })
+  // endsnippet
+])).then(() =>
+
+    // Issue Control Agreement
+    client.transactions.build(builder => {
+        builder.issue({
+            assetAlias: req.body.signature + ' Control Agreement',
+            amount: 1
+        })
+        builder.controlWithAccount({
+            accountAlias: req.body.signature,
+            assetAlias: req.body.signature + ' Control Agreement',
+            amount: 1,
+            reference_data: {
+            	broker: req.body.signature,
+		      	client: req.body.clientname,
+		      	lender: req.body.lendingpartner,
+            }
+        })
+    })
+    .then(issuance => signer.sign(issuance))
+    .then(signed => client.transactions.submit(signed))
+    .catch(err =>
+  process.nextTick(() => {throw err })
+  ));
+	req.flash('success_msg', 'You have issued a Control Agreement to ' + req.body.lendingpartner + ' and ' + req.body.clientname);
+	res.redirect('/users/login')
+})
+
+// POST to client agreement page
+router.post('/clientagreement', function(req, res){
+	Promise.all([
+  client.mockHsm.keys.create(),
+]).then(keys => {
+  assetKey = keys[0].xpub
+
+  signer.addKey(assetKey, client.mockHsm.signerConnection)
+}).then(() => Promise.all([
+  client.accounts.create({
+    alias: req.body.signature,
+    rootXpubs: [assetKey],
+    quorum: 1,
+  }),
+
+  // create control agreement
+  client.assets.create({
+    alias: req.body.signature + ' Control Agreement',
+    rootXpubs: [assetKey],
+    quorum: 1,
+  })
+  // endsnippet
+])).then(() =>
+
+    // Issue Control Agreement
+    client.transactions.build(builder => {
+        builder.issue({
+            assetAlias: req.body.signature + ' Control Agreement',
+            amount: 1
+        })
+        builder.controlWithAccount({
+            accountAlias: req.body.signature,
+            assetAlias: req.body.signature + ' Control Agreement',
+            amount: 1,
+            reference_data: {
+		      	client: req.body.signature,
+            }
+        })
+    })
+    .then(issuance => signer.sign(issuance))
+    .then(signed => client.transactions.submit(signed))
+    .catch(err =>
+  process.nextTick(() => {throw err })
+  ));
+	req.flash('success_msg', 'You have signed your Control Agreement') ;
+	res.redirect('/users/login')
+})
+
+// POST to lender agreement page
+router.post('/lenderagreement', function(req, res){
+	Promise.all([
+  client.mockHsm.keys.create(),
+]).then(keys => {
+  assetKey = keys[0].xpub
+
+  signer.addKey(assetKey, client.mockHsm.signerConnection)
+}).then(() => Promise.all([
+  client.accounts.create({
+    alias: req.body.signature,
+    rootXpubs: [assetKey],
+    quorum: 1,
+  }),
+
+  // create control agreement
+  client.assets.create({
+    alias: req.body.signature + ' Control Agreement',
+    rootXpubs: [assetKey],
+    quorum: 1,
+  })
+  // endsnippet
+])).then(() =>
+
+    // Issue Control Agreement
+    client.transactions.build(builder => {
+        builder.issue({
+            assetAlias: req.body.signature + ' Control Agreement',
+            amount: 1
+        })
+        builder.controlWithAccount({
+            accountAlias: req.body.signature,
+            assetAlias: req.body.signature + ' Control Agreement',
+            amount: 1,
+            reference_data: {
+		      	lender: req.body.signature,
+            }
+        })
+    })
+    .then(issuance => signer.sign(issuance))
+    .then(signed => client.transactions.submit(signed))
+    .catch(err =>
+  process.nextTick(() => {throw err })
+  ));
+	req.flash('success_msg', 'You have signed your Control Agreement') ;
+	res.redirect('/users/login')
+})
+
+router.get('/brokerindex', function(req, res){
+	res.render('brokerindex');
+})
+
+router.post('/brokerindex', function(req, res){
+  	Promise.all([
+    
+    // snippet create-key
+    client.mockHsm.keys.create()
+
+    ]).then(keys => {
+    aliceKey = keys[0].xpub,
+    // snippet signer-add-key
+    signer.addKey(aliceKey, client.mockHsm.signerConnection)
+    // endsnippet
+
+    }).then(() => Promise.all([
+
+    // snippet create-asset: STOCK 1
+    client.assets.create({
+    	alias: req.body.Stock1,
+    	rootXpubs: [aliceKey],
+    	quorum: 1}),
+    // endsnippet
+
+    // snippet create-asset: STOCK 2
+    client.assets.create({
+    	alias: req.body.Stock2,
+    	rootXpubs: [aliceKey],
+    	quorum: 1}),
+    
+    //snippet create-asset: NameTotal (To store total collateral)
+    client.assets.create({
+      alias: 'Loan Value',
+      rootXpubs: [aliceKey],
+      quorum: 1,
+    }),
+    // endsnippet
+    
+    // snippet create-account-alice: FIRST & LAST NAME
+    client.accounts.create({
+      alias: req.body.firstName + " " + req.body.lastName,
+      rootXpubs: [aliceKey],
+      quorum: 1
+    })
+    // endsnippet
+])).then(() => 
+
+    //TRANSACTIONS:
+    //Putting the first stock on the ledger
+    client.transactions.build(builder => {
+        builder.issue({
+            assetAlias: (req.body.Stock1).replace(/\s+/g, ''),
+            amount: parseInt(req.body.quantity1)
+        })
+        builder.controlWithAccount({
+            accountAlias: req.body.firstName + " " + req.body.lastName,
+            assetAlias: (req.body.Stock1).replace(/\s+/g, ''),
+            amount: parseInt(req.body.quantity1)
+        })
+    })
+    .then(issuance => signer.sign(issuance))
+    .then(signed => client.transactions.submit(signed))
+    ).then(() => {
+
+    //Putting the second stock on the ledger
+    client.transactions.build(builder => {
+        builder.issue({
+            assetAlias: (req.body.Stock2).replace(/\s+/g, ''),
+            amount: parseInt(req.body.quantity2)
+        })
+        builder.controlWithAccount({
+            accountAlias: req.body.firstName + " " + req.body.lastName,
+            assetAlias: (req.body.Stock2).replace(/\s+/g, ''),
+            amount: parseInt(req.body.quantity2)
+        })
+    })
+    .then(issuance => signer.sign(issuance))
+    .then(signed => client.transactions.submit(signed))
+  // }).then( f => {
+
+  //   googleStocks([(req.body.Stock1).replace(/\s+/g, '')], function(error, data) {
+  //   		var Stock1Total=data[0].l * req.body.quantity1;
+  // 	});
+  //   //var Stock1Total=data[0].l * req.body.quantity1;
+
+  //   googleStocks([(req.body.Stock2).replace(/\s+/g, '')], function(error, data) {
+  //   		var Stock2Total=data[0].l * req.body.quantity2;
+  // 	});
+
+  //   //Putting the total stock amount on the ledger
+  //   client.transactions.build(builder => {
+  //       builder.issue({
+  //           assetAlias: req.body.firstName + req.body.lastName+"Total",
+  //           amount: Stock2Total+Stock1Total
+  //       })
+  //       builder.controlWithAccount({
+  //           accountAlias: req.body.firstName + " " + req.body.lastName,
+  //           assetAlias: req.body.firstName + req.body.lastName+"Total",
+  //           amount: Stock2Total+Stock1Total
+  //       })
+  //   })
+  // .then(issuance => {
+  //       return _signer.sign(issuance)
+  //   }).then(signed => {
+  //       return client.transactions.submit(signed)
+  //   })
+  // })
+  .catch(err =>
+  process.nextTick(() => {throw err })
+  )
+  req.flash('success_msg', 'You have logged an asset');
+  res.redirect('/brokerindex')
+})});
 
 router.get('/logout', function(req, res){
 	req.logout();
