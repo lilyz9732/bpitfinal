@@ -4,7 +4,7 @@
       <li role="presentation"><a href="/users/brokeragreement">Control Agreement</a></li>
   </ul>
 </nav>
-    <h2 class="page-header">Broker Dashboard</h2>
+    <h2 class="page-header">Dashboard</h2>
     {{#if errors}}
       {{#each errors}}
         <div class="alert alert-danger">{{msg}}</div>
@@ -17,30 +17,81 @@
       <!-- USER INFO-->
       <!-- /USER INFO-->
       <!-- USER LIST-->
-      <h2>Account List</h2>
+      <h3>Account List</h3>
       <div id="accountList">
-        <table>
-          <thead>
-            <th>username</th>
-            <th>Last Name</th>
+        <table style = "width: 100%" >
+        <style>
+          table, th, td {
+              border: 1px solid black;
+              border-collapse: collapse;
+          }
+          th, td {
+              padding: 5px;
+              text-align: left;
+          }
+          </style>
+          <tr>
+            <th>Firstname</th>
+            <th>Lastname</th>
+            <th>Lender</th>
             <th>Loan Amount</th>
-            <th>Wealth Collateral</th>
+            <th>Total Collateral</th>
+            <th>Loan Credit</th>
+            <th>Status</th>
           </thead>
           <tbody></tbody>
         </table>
       </div>
       <!-- /USER LIST-->
       <!-- ADD USER-->
-      <h2>Add Collateral </h2>
+      <h4>Add Account</h4>
       <div id="addAccount">
-        <form method="post" action="/brokerindex" >
-        <input type="text" class="form-control" placeholder="firstName" name="firstName">
-        <input type="text" class="form-control" placeholder="lastName" name="lastName">
-        <input type="text" class="form-control" placeholder="Stock1" name="Stock1">
-        <input type="text" class="form-control" placeholder="quantity1" name="quantity1">
-        <input type="text" class="form-control" placeholder="Stock2" name="Stock2">
-        <input type="text" class="form-control" placeholder="quantity2" name="quantity2">
-        <button id="btnAddAccount">Add Asset</button>
+        <form method="post" action="/users/brokerindex" >
+        <div class = "form-group col-xs-6">
+          <input type="text" class="form-control" placeholder="First Name" name="firstName">
+        </div>
+        <div class = "form-group col-xs-6">
+          <input type="text" class="form-control" placeholder="Last Name" name="lastName">
+        </div>
+        <div class = "form-group col-xs-4">
+          <strong>CASH</strong>
+        </div>
+        <div class = "form-group col-xs-4">
+          <input type="text" class="form-control" placeholder="Value" name="cashvalue">
+        </div>
+        <div class = "form-group col-xs-4">
+          <input type="text" class="form-control" placeholder="Margin %" name="cashmargin">
+        </div>
+        <div class = "form-group col-xs-4">
+          <strong>EQUITY</strong>
+        </div>
+        <div class = "form-group col-xs-4">
+          <input type="text" class="form-control" placeholder="Value" name="equityvalue">
+        </div>
+        <div class = "form-group col-xs-4">
+          <input type="text" class="form-control" placeholder="Margin %" name="equitymargin">
+        </div>
+        <div class = "form-group col-xs-4">
+          <strong>REAL ESTATE</strong>
+        </div>
+        <div class = "form-group col-xs-4">
+          <input type="text" class="form-control" placeholder="Value" name="landvalue">
+        </div>
+        <div class = "form-group col-xs-4">
+          <input type="text" class="form-control" placeholder="Margin %" name="landmargin">
+        </div>
+        <div class = "form-group col-xs-4">
+          <strong>BUSINESS ASSETS</strong>
+        </div>
+        <div class = "form-group col-xs-4">
+          <input type="text" class="form-control" placeholder="Value" name="businessvalue">
+        </div>
+        <div class = "form-group col-xs-4">
+          <input type="text" class="form-control" placeholder="Margin %" name="businessmargin">
+        </div>
+        <div align = "center">
+        <button id="btnAddAccount">Submit</button>
+        </div>
         </form>
       </div>
       <!-- /ADD USER-->

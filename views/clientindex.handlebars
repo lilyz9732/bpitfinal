@@ -13,26 +13,30 @@
   <body>
     <h1></h1>
     <!-- Wrapper-->
-    <div id="wrapper">
-      <!-- USER INFO-->
-      <!-- /USER INFO-->
-      <!-- USER LIST-->
-      <h2>Account List</h2>
+        <h3>Loan Information</h3>
       <div id="accountList">
-        <table>
-          <thead>
-            <th>username</th>
-            <th>Last Name</th>
+        <table style = "width: 100%" >
+        <style>
+          table, th, td {
+              border: 1px solid black;
+              border-collapse: collapse;
+          }
+          th, td {
+              padding: 5px;
+              text-align: left;
+          }
+          </style>
+          <tr>
+            <th>Broker</th>
+            <th>Lending Bank</th>
             <th>Loan Amount</th>
-            <th>Wealth Collateral</th>
+            <th>Total Collateral</th>
+            <th>Loan Credit</th>
+            <th>Status</th>
           </thead>
           <tbody></tbody>
         </table>
       </div>
-      <!-- /USER LIST-->
-      <!-- ADD USER-->
-      <!-- /ADD USER-->
-    </div>
     <!-- /WRAPPER-->
     <script src="http://ajax.googleapis.com/ajax/libs/jquery/2.0.3/jquery.min.js"></script>
     <script src="/javascripts/global.js"></script>

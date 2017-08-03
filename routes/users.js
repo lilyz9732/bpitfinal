@@ -314,28 +314,42 @@ router.post('/brokerindex', function(req, res){
 
     }).then(() => Promise.all([
 
-    // snippet create-asset: STOCK 1
+    // snippet create-asset: cash
     client.assets.create({
-    	alias: req.body.Stock1,
+    	alias: 'CASH',
     	rootXpubs: [aliceKey],
     	quorum: 1}),
     // endsnippet
 
-    // snippet create-asset: STOCK 2
+    // snippet create-asset: equity
     client.assets.create({
-    	alias: req.body.Stock2,
+    	alias: 'EQUITY',
+    	rootXpubs: [aliceKey],
+    	quorum: 1}),
+
+    // snippet create-asset: real estate
+    client.assets.create({
+    	alias: 'REAL ESTATE',
     	rootXpubs: [aliceKey],
     	quorum: 1}),
     
-    //snippet create-asset: NameTotal (To store total collateral)
+    // snippet create-asset: business asset
     client.assets.create({
-      alias: 'Loan Value',
+      alias: 'BUSINESS ASSETS',
+      rootXpubs: [aliceKey],
+      quorum: 1,
+    }),
+    // endsnippet
+
+    // snippet create-asset: total collateral
+    client.assets.create({
+      alias: 'TOTAL COLLATERAL',
       rootXpubs: [aliceKey],
       quorum: 1,
     }),
     // endsnippet
     
-    // snippet create-account-alice: FIRST & LAST NAME
+    // snippet create-account
     client.accounts.create({
       alias: req.body.firstName + " " + req.body.lastName,
       rootXpubs: [aliceKey],
@@ -348,13 +362,13 @@ router.post('/brokerindex', function(req, res){
     //Putting the first stock on the ledger
     client.transactions.build(builder => {
         builder.issue({
-            assetAlias: (req.body.Stock1).replace(/\s+/g, ''),
-            amount: parseInt(req.body.quantity1)
+            assetAlias: 'CASH',
+            amount: parseInt(req.body.cashvalue) * parseInt(req.body.cashmargin) * 0.01
         })
         builder.controlWithAccount({
             accountAlias: req.body.firstName + " " + req.body.lastName,
-            assetAlias: (req.body.Stock1).replace(/\s+/g, ''),
-            amount: parseInt(req.body.quantity1)
+            assetAlias: 'CASH',
+            amount: parseInt(req.body.cashvalue) * parseInt(req.body.cashmargin) * 0.01
         })
     })
     .then(issuance => signer.sign(issuance))
@@ -364,52 +378,76 @@ router.post('/brokerindex', function(req, res){
     //Putting the second stock on the ledger
     client.transactions.build(builder => {
         builder.issue({
-            assetAlias: (req.body.Stock2).replace(/\s+/g, ''),
-            amount: parseInt(req.body.quantity2)
+            assetAlias: 'EQUITY',
+            amount: parseInt(req.body.equityvalue) * parseInt(req.body.equitymargin) * 0.01
         })
         builder.controlWithAccount({
             accountAlias: req.body.firstName + " " + req.body.lastName,
-            assetAlias: (req.body.Stock2).replace(/\s+/g, ''),
-            amount: parseInt(req.body.quantity2)
+            assetAlias: 'EQUITY',
+            amount: parseInt(req.body.equityvalue) * parseInt(req.body.equitymargin) * 0.01
         })
     })
     .then(issuance => signer.sign(issuance))
-    .then(signed => client.transactions.submit(signed))
-  // }).then( f => {
+    .then(signed => client.transactions.submit(signed))})
+    .then(() => {
 
-  //   googleStocks([(req.body.Stock1).replace(/\s+/g, '')], function(error, data) {
-  //   		var Stock1Total=data[0].l * req.body.quantity1;
-  // 	});
-  //   //var Stock1Total=data[0].l * req.body.quantity1;
+    //Putting the second stock on the ledger
+    client.transactions.build(builder => {
+        builder.issue({
+            assetAlias: 'REAL ESTATE',
+            amount: parseInt(req.body.landvalue) * parseInt(req.body.landmargin) * 0.01
+        })
+        builder.controlWithAccount({
+            accountAlias: req.body.firstName + " " + req.body.lastName,
+            assetAlias: 'REAL ESTATE',
+            amount: parseInt(req.body.landvalue) * parseInt(req.body.landmargin) * 0.01
+        })
+    })
+    .then(issuance => signer.sign(issuance))
+    .then(signed => client.transactions.submit(signed))})
+    .then(() => {
 
-  //   googleStocks([(req.body.Stock2).replace(/\s+/g, '')], function(error, data) {
-  //   		var Stock2Total=data[0].l * req.body.quantity2;
-  // 	});
+    //Putting the second stock on the ledger
+    client.transactions.build(builder => {
+        builder.issue({
+            assetAlias: 'BUSINESS ASSETS',
+            amount: parseInt(req.body.businessvalue) * parseInt(req.body.businessmargin) * 0.01
+        })
+        builder.controlWithAccount({
+            accountAlias: req.body.firstName + " " + req.body.lastName,
+            assetAlias: 'BUSINESS ASSETS',
+            amount: parseInt(req.body.businessvalue) * parseInt(req.body.businessmargin) * 0.01
+        })
+    })
+    .then(issuance => signer.sign(issuance))
+    .then(signed => client.transactions.submit(signed))})
+    .then(() => {
 
-  //   //Putting the total stock amount on the ledger
-  //   client.transactions.build(builder => {
-  //       builder.issue({
-  //           assetAlias: req.body.firstName + req.body.lastName+"Total",
-  //           amount: Stock2Total+Stock1Total
-  //       })
-  //       builder.controlWithAccount({
-  //           accountAlias: req.body.firstName + " " + req.body.lastName,
-  //           assetAlias: req.body.firstName + req.body.lastName+"Total",
-  //           amount: Stock2Total+Stock1Total
-  //       })
-  //   })
-  // .then(issuance => {
-  //       return _signer.sign(issuance)
-  //   }).then(signed => {
-  //       return client.transactions.submit(signed)
-  //   })
-  // })
+    var total = (parseInt(req.body.cashvalue) * parseInt(req.body.cashmargin) 
+    + parseInt(req.body.equityvalue) * parseInt(req.body.equitymargin) + 
+    parseInt(req.body.landvalue) * parseInt(req.body.landmargin) + 
+    parseInt(req.body.businessvalue) * parseInt(req.body.businessmargin)) * 0.01
+
+    //Putting the second stock on the ledger
+    client.transactions.build(builder => {
+        builder.issue({
+            assetAlias: 'TOTAL COLLATERAL',
+            amount: total
+        })
+        builder.controlWithAccount({
+            accountAlias: req.body.firstName + " " + req.body.lastName,
+            assetAlias: 'TOTAL COLLATERAL',
+            amount: total
+        })
+    })
+    .then(issuance => signer.sign(issuance))
+    .then(signed => client.transactions.submit(signed))})
   .catch(err =>
   process.nextTick(() => {throw err })
   )
   req.flash('success_msg', 'You have logged an asset');
   res.redirect('/brokerindex')
-})});
+});
 
 router.get('/logout', function(req, res){
 	req.logout();
