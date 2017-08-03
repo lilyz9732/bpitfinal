@@ -23,10 +23,10 @@
     "google-stocks": "^1.0.1",
     "mongodb": "*",
     "mongoose": "*",
+    "multer": "1.1.0",
     "passport": "*",
     "passport-http": "*",
     "passport-local": "*",
-    "multer": "1.1.0",
     "xls-to-json-lc": "0.3.4",
     "xlsx-to-json-lc": "0.4.1"
   }

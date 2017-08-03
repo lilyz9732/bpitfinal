@@ -14,6 +14,7 @@ var mongoose = require('mongoose');
 var multer = require('multer');
 var xlstojson = require("xls-to-json-lc");
 var xlsxtojson = require("xlsx-to-json-lc");
+var googleStocks = require('google-stocks');
 
 mongoose.connect('mongodb://localhost/loginapp');
 var db = mongoose.connection;
@@ -23,6 +24,7 @@ var users = require('./routes/users');
 
 // Init App
 var app = express();
+var colltotal = 0;
 
 // View Engine
 app.set('views', path.join(__dirname, 'views'));
@@ -100,6 +102,7 @@ var upload = multer({ //multer settings
             }).single('file');
 /** API path that will upload the files */
 app.post('/upload', function(req, res) {
+    var colltotal = 0;
     var exceltojson;
     upload(req,res,function(err){
         if(err){
@@ -120,6 +123,7 @@ app.post('/upload', function(req, res) {
             exceltojson = xlstojson;
         }
         try {
+            console.log(req.file.path);
             exceltojson({
                 input: req.file.path,
                 output: null, //since we don't need output.json
@@ -128,7 +132,24 @@ app.post('/upload', function(req, res) {
                 if(err) {
                     return res.json({error_code:1,err_desc:err, data: null});
                 } 
-                res.json({error_code:0,err_desc:null, data: result});
+                // result is the json data
+                count = 0;
+                for (var i in result) {
+                  googleStocks([result[i].stocks], function(error, data){
+                    colltotal += data[0].l * result[i].quantity;
+                    console.log("inside" + colltotal);
+                    count += 1;
+                    if (count == result.length){
+                      console.log(colltotal);
+                      req.flash('success_msg', 'Collateral Total is ' + colltotal) ;
+                      res.redirect('/brokerindex');
+                    }
+                  })
+                  console.log("outside" + colltotal);
+                }
+                // console.log(colltotal);
+                // req.flash('success_msg', 'Collateral Total is ' + colltotal) ;
+                // res.redirect('users/login');
             });
         } catch (e){
             res.json({error_code:1,err_desc:"Corupted excel file"});
