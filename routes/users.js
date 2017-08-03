@@ -224,6 +224,8 @@ router.post('/clientagreement', function(req, res){
             amount: 1,
             reference_data: {
 		      	client: req.body.signature,
+		      	lender: req.body.lendingpartner,
+		      	broker: req.body.brokerpartner,
             }
         })
     })
@@ -276,6 +278,8 @@ router.post('/lenderagreement', function(req, res){
             amount: 1,
             reference_data: {
 		      	lender: req.body.signature,
+		      	client: req.body.clientname,
+		      	lender: req.body.brokerpartner,
             }
         })
     })
