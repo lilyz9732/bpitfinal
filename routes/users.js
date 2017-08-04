@@ -169,9 +169,9 @@ router.post('/brokeragreement', function(req, res){
             assetAlias: req.body.signature + ' Control Agreement',
             amount: 1,
             reference_data: {
-            	broker: req.body.signature,
-		      	client: req.body.clientname,
-		      	lender: req.body.lendingpartner,
+              broker: req.body.signature,
+		      	 client: req.body.clientname,
+		      	 lender: req.body.lendingpartner,
             }
         })
     })
@@ -283,7 +283,7 @@ router.post('/lenderagreement', function(req, res){
             reference_data: {
 		      	lender: req.body.signature,
 		      	client: req.body.clientname,
-		      	lender: req.body.brokerpartner,
+		      	broker: req.body.brokerpartner,
             }
         })
     })
