@@ -14,31 +14,97 @@
     <h1></h1>
     <!-- Wrapper-->
         <h3>Loan Information</h3>
-      <div id="accountList">
-        <table style = "width: 100%" >
-        <style>
-          table, th, td {
-              border: 1px solid black;
-              border-collapse: collapse;
-          }
-          th, td {
-              padding: 5px;
-              text-align: left;
-          }
-          </style>
-          <tr>
-            <th>Broker</th>
-            <th>Lending Bank</th>
-            <th>Loan Amount</th>
-            <th>Total Collateral</th>
-            <th>Loan Credit</th>
-            <th>Status</th>
-          </thead>
-          <tbody></tbody>
-        </table>
-      </div>
+     <div>
+        <form method="post" id="myForm" action="users/brokerquery" >
+        <button id="btnDisplayAct" style = "margin-bottom:10px">Display Account List</button>
+        </form>
+        </div>
+    
+          <div id="accountList">
+            <table id="myTable" style = "display:none" >
+            <style>
+                
+              table {
+/*                  padding-top: 5px;*/
+                  width: 100%;
+                  margin-top: 5px;
+                  border-radius: 8px;
+              }
+
+              th, td {
+                height: 34px;
+                  
+                padding: 6px 12px;
+                font-size: 14px;
+                line-height: 1.42857143;
+                color: #555;
+                background-color: #fff;
+                background-image: none;
+                border: 1px solid #ccc;
+                
+                  width:100%;
+/*                  padding: 5px;*/
+                  text-align: left;
+/*                  border: 1px solid black;*/
+/*                  border-collapse: collapse;*/
+              }
+              </style>
+              <thead>
+                <tr>
+                    <th>Firstname</th>
+                    <th>Lastname</th>
+                    <th>Lender</th>
+                    <th>Loan Value</th>
+                    <th>Total Collateral</th>
+                </tr>
+              </thead>
+              <tbody>
+
+              </tbody>
+            </table>
+          </div>
     <!-- /WRAPPER-->
+      <div>
     <script src="http://ajax.googleapis.com/ajax/libs/jquery/2.0.3/jquery.min.js"></script>
-    <script src="/javascripts/global.js"></script>
+        <script src="/javascripts/global.js"></script>
+        <script type="text/javascript" src="https://s3.tradingview.com/tv.js"></script>
+      
+      <script type='text/javascript'>
+        $("#myForm").submit(function(event) {
+          event.preventDefault();
+          var $form = $( this ),
+              url = $form.attr( 'action' );
+          var posting = $.post( url, {});
+          posting.done(function( data ) {
+                          
+            document.getElementById("myTable").style.width = "100%";
+            document.getElementById("myTable").style.display = "inline";
+                
+            var tableRef = document.getElementById('myTable').getElementsByTagName('tbody')[0];
+            
+            var newRow   = tableRef.insertRow(tableRef.rows.length);           
+            var newCell  = newRow.insertCell(0);
+            var newText  = document.createTextNode(data.firstname);
+            newCell.appendChild(newText);
+            
+            newCell  = newRow.insertCell(1);
+            newText  = document.createTextNode(data.lastname);
+            newCell.appendChild(newText);
+              
+            newCell  = newRow.insertCell(2);
+            newText  = document.createTextNode(data.lender);
+            newCell.appendChild(newText);
+              
+            newCell  = newRow.insertCell(3);
+            newText  = document.createTextNode(data.loanvalue);
+            newCell.appendChild(newText);
+
+            newCell  = newRow.insertCell(4);
+            newText  = document.createTextNode(data.total);
+            newCell.appendChild(newText);
+          });
+        });
+    </script>
+      </div>
   </body>
 </html>

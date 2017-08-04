@@ -17,9 +17,7 @@
       <!-- USER INFO-->
       <!-- /USER INFO-->
       <!-- USER LIST-->
-      <div class = "form-group col-xs-6">
-        <h3>Account List</h3>
-      </div>
+
       <div class = "form-group col-xs-6">
       <h3>Insert Collateral File</h3>
         <form id      =  "uploadForm"
@@ -37,92 +35,186 @@
         </div>
       </form> -->
 
-      <div id="accountList">
-        <table style = "width: 100%" >
-        <style>
-          table, th, td {
-              border: 1px solid black;
-              border-collapse: collapse;
-          }
-          th, td {
-              padding: 5px;
-              text-align: left;
-          }
-          </style>
-          <tr>
-            <th>Firstname</th>
-            <th>Lastname</th>
-            <th>Lender</th>
-            <th>Loan Amount</th>
-            <th>Total Collateral</th>
-            <th>Loan Credit</th>
-            <th>Status</th>
-          </thead>
-          <tbody></tbody>
-        </table>
-      </div>
+ 
       <!-- /USER LIST-->
       <!-- ADD USER-->
-      <h4>Add Account</h4>
-      <div id="addAccount">
-        <form method="post" action="/users/brokerindex" >
+        <br>
+        <br>
+        <br>
+        <br>
+        <br>
+        <br>
+        <br>
+      <div>
+        <h4> Add Account</h4>
+        <form method="post" action="users/brokerindex" >
         <div class = "form-group col-xs-6">
-          <input type="text" class="form-control" placeholder="First Name" name="firstName">
+          <input type="text" class="form-control" placeholder="First Name" id="firstName" name="firstName">
         </div>
         <div class = "form-group col-xs-6">
-          <input type="text" class="form-control" placeholder="Last Name" name="lastName">
+          <input type="text" class="form-control" placeholder="Last Name" id="lastName" name="lastName">
         </div>
+            
         <div class = "form-group col-xs-4">
           <strong>CASH</strong>
         </div>
         <div class = "form-group col-xs-4">
-          <input type="text" class="form-control" placeholder="$" name="cashvalue">
+          <input type="text" class="form-control" placeholder="Value" id="cashvalue" name="cashvalue">
         </div>
         <div class = "form-group col-xs-4">
-          <input type="text" class="form-control" placeholder="Margin %" name="cashmargin">
+          <input type="text" class="form-control" placeholder="Margin %" id="cashmargin" name="cashmargin">
         </div>
+            
+            
         <div class = "form-group col-xs-4">
           <strong>EQUITY</strong>
         </div>
         <div class = "form-group col-xs-4">
-          <input type="text" class="form-control" placeholder="$" name="equityvalue">
+          <input type="text" class="form-control" placeholder="Value" id="equityvalue" name="equityvalue">
         </div>
         <div class = "form-group col-xs-4">
-          <input type="text" class="form-control" placeholder="Margin %" name="equitymargin">
+          <input type="text" class="form-control" placeholder="Margin %" id="equitymargin" name="equitymargin">
         </div>
+            
+            
         <div class = "form-group col-xs-4">
           <strong>REAL ESTATE</strong>
         </div>
         <div class = "form-group col-xs-4">
-          <input type="text" class="form-control" placeholder="$" name="landvalue">
+          <input type="text" class="form-control" placeholder="Value" id="landvalue" name="landvalue">
         </div>
         <div class = "form-group col-xs-4">
-          <input type="text" class="form-control" placeholder="Margin %" name="landmargin">
+          <input type="text" class="form-control" placeholder="Margin %" id="landmargin" name="landmargin">
         </div>
+            
+            
         <div class = "form-group col-xs-4">
           <strong>BUSINESS ASSETS</strong>
         </div>
         <div class = "form-group col-xs-4">
-          <input type="text" class="form-control" placeholder="$" name="businessvalue">
+          <input type="text" class="form-control" placeholder="Value" id="businessvalue" name="businessvalue">
         </div>
         <div class = "form-group col-xs-4">
-          <input type="text" class="form-control" placeholder="Margin %" name="businessmargin">
+          <input type="text" class="form-control" placeholder="Margin %" id="businessmargin" name="businessmargin">
         </div>
+            
+
         <div class = "form-group col-xs-4">
           <strong>LOAN VALUE</strong>
         </div>
-        <div class = "form-group col-xs-4">
-          <input type="text" class="form-control" placeholder="$" name="loanvalue">
+        <div class = "form-group col-xs-8">
+          <input type="text" class="form-control" placeholder="Value" id="loanvalue" name="loanvalue">
         </div>
+
+        <div class = "form-group col-xs-4">
+          <strong>LENDER</strong>
+        </div>
+        <div class = "form-group col-xs-8">
+          <input type="text" class="form-control" placeholder="Value" id="lender" name="lender">
+        </div>
+            
         <div align = "center">
         <button id="btnAddAccount">Submit</button>
         </div>
         </form>
       </div>
+        
+        <div>
+        <form method="post" id="myForm" action="users/brokerquery" >
+        <button id="btnDisplayAct" style = "margin-bottom:10px">Display Account List</button>
+        </form>
+        </div>
+    
+          <div id="accountList">
+            <table id="myTable" style = "display:none" >
+            <style>
+                
+              table {
+/*                  padding-top: 5px;*/
+                  width: 100%;
+                  margin-top: 5px;
+                  border-radius: 8px;
+              }
+
+              th, td {
+                height: 34px;
+                  
+                padding: 6px 12px;
+                font-size: 14px;
+                line-height: 1.42857143;
+                color: #555;
+                background-color: #fff;
+                background-image: none;
+                border: 1px solid #ccc;
+                
+                  width:100%;
+/*                  padding: 5px;*/
+                  text-align: left;
+/*                  border: 1px solid black;*/
+/*                  border-collapse: collapse;*/
+              }
+              </style>
+              <thead>
+                <tr>
+                    <th>Firstname</th>
+                    <th>Lastname</th>
+                    <th>Lender</th>
+                    <th>Loan Value</th>
+                    <th>Total Collateral</th>
+                </tr>
+              </thead>
+              <tbody>
+
+              </tbody>
+            </table>
+          </div>
+    
+        
+        
+        
+        
+        
       <!-- /ADD USER-->
     </div>
     <!-- /WRAPPER-->
     <script src="http://ajax.googleapis.com/ajax/libs/jquery/2.0.3/jquery.min.js"></script>
+    <script src="http://code.jquery.com/jquery-1.9.1.js"></script>
     <script src="/javascripts/global.js"></script>
+    <script type='text/javascript'>
+        $("#myForm").submit(function(event) {
+          event.preventDefault();
+          var $form = $( this ),
+              url = $form.attr( 'action' );
+          var posting = $.post( url, {});
+          posting.done(function( data ) {
+                          
+            document.getElementById("myTable").style.width = "100%";
+            document.getElementById("myTable").style.display = "inline";
+                
+            var tableRef = document.getElementById('myTable').getElementsByTagName('tbody')[0];
+            
+            var newRow   = tableRef.insertRow(tableRef.rows.length);           
+            var newCell  = newRow.insertCell(0);
+            var newText  = document.createTextNode(data.firstname);
+            newCell.appendChild(newText);
+            
+            newCell  = newRow.insertCell(1);
+            newText  = document.createTextNode(data.lastname);
+            newCell.appendChild(newText);
+              
+            newCell  = newRow.insertCell(2);
+            newText  = document.createTextNode(data.lender);
+            newCell.appendChild(newText);
+              
+            newCell  = newRow.insertCell(3);
+            newText  = document.createTextNode(data.loanvalue);
+            newCell.appendChild(newText);
+
+            newCell  = newRow.insertCell(4);
+            newText  = document.createTextNode(data.total);
+            newCell.appendChild(newText);
+          });
+        });
+    </script>
   </body>
 </html>

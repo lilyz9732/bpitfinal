@@ -518,8 +518,12 @@ router.post('/brokerindex', function(req, res){
             assetAlias: 'TOTAL COLLATERAL',
             amount: total,
             reference_data: {
-		      	client: req.body.firstName + " " + req.body.lastName,
-		      	asset: 'TOTAL COLLATERAL'
+                type: "totalcollateral",
+            	firstname: req.body.firstName,
+		      	lastname: req.body.lastName,
+		      	lender: req.body.lender,
+                loanvalue:req.body.loanvalue,
+                total: total,
             }
         })
     })
@@ -531,6 +535,23 @@ router.post('/brokerindex', function(req, res){
   req.flash('success_msg', 'You have sucessfully added/updated ' + req.body.firstName + "'s account");
   res.redirect('/brokerindex')
 }});
+
+router.post('/brokerquery', function(req, res){                 
+    client.transactions.queryAll({
+      filter:  'inputs(reference_data.type=$1) OR outputs(reference_data.type=$1)',
+      filterParams: ['totalcollateral'],
+    }, (tx, next, done) => {
+//      console.log("something")
+      console.log(tx)
+      tx.outputs.forEach(output => {
+        var json = JSON.stringify(output.referenceData)
+        obj = JSON.parse(json);
+        res.send(obj);
+      })
+      next()
+    })
+});
+
 
 router.post('/check', function(req, res){
   count = 0;
