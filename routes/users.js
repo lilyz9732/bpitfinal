@@ -532,6 +532,34 @@ router.post('/brokerindex', function(req, res){
   res.redirect('/brokerindex')
 }});
 
+router.post('/check', function(req, res){
+  count = 0;
+  client.transactions.queryAll({
+  filter: 'outputs(reference_data.client=$1) AND outputs(reference_data.broker=$2)',
+  filterParams: [req.body.client, req.body.broker],
+}, (tx, next, done) => {
+  tx.outputs.forEach(output => {
+    count += 1;
+    // var json = JSON.stringify(output.referenceData);
+    // obj = JSON.parse(json);
+    // res.send(obj);
+    if (count == 3){
+      req.flash('success_msg', req.body.client + " and " + req.body.broker + " have both signed the control agreement");
+      res.redirect('/lenderindex')
+    }
+    next()
+  })
+  req.flash('error_msg', "Control agreement has not been initiated by " + req.body.broker);
+  res.redirect('/lenderindex');
+
+  // next() moves to the next item.
+  // done() terminates the loop early, and causes the
+  //   query promise to resolve. Passing an error will reject
+  //   the promise.
+  
+})
+})
+
 router.get('/logout', function(req, res){
 	req.logout();
 
