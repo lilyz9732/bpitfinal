@@ -15,6 +15,7 @@ var multer = require('multer');
 var xlstojson = require("xls-to-json-lc");
 var xlsxtojson = require("xlsx-to-json-lc");
 var googleStocks = require('google-stocks');
+const client = new chain.Client()
 
 mongoose.connect('mongodb://localhost/loginapp');
 var db = mongoose.connection;
@@ -132,20 +133,44 @@ app.post('/upload', function(req, res) {
                 if(err) {
                     return res.json({error_code:1,err_desc:err, data: null});
                 } 
+                console.log(result);
                 // result is the json data
                 count = 0;
                 for (var i in result) {
                   googleStocks([result[i].stocks], function(error, data){
                     colltotal += data[0].l * result[i].quantity;
-                    console.log("inside" + colltotal);
                     count += 1;
                     if (count == result.length){
-                      console.log(colltotal);
-                      req.flash('success_msg', 'Collateral Total is ' + colltotal) ;
-                      res.redirect('/brokerindex');
+                      client.balances.queryAll({
+                        filter: 'asset_alias=$1',
+                        filterParams: ["LOAN VALUE"],
+                      }, (loan, next) => {
+                          client.balances.queryAll({
+                            filter: 'asset_alias=$1',
+                            filterParams: ["CASH"],
+                          }, (cash, next) => {
+                            client.balances.queryAll({
+                              filter: 'asset_alias=$1',
+                              filterParams: ["BUSINESS ASSETS"],
+                            }, (business, next) => {
+                              client.balances.queryAll({
+                                filter: 'asset_alias=$1',
+                                filterParams: ["REAL ESTATE"],
+                              },(land, next) => {
+                                if (loan.amount <= (colltotal + cash.amount + business.amount + land.amount)){
+                                  req.flash('success_msg', 'Collateral is doing good');
+                                  res.redirect('/brokerindex');
+                                }
+                                else {
+                                  req.flash('error_msg', 'Warning: ' + result[i].stocks + "'s Collateral is $" + (loan.amount - colltotal) + ' underwater');
+                                  res.redirect('/brokerindex');
+                                }
+                              })
+                            })
+                        })
+                      })
                     }
                   })
-                  console.log("outside" + colltotal);
                 }
                 // console.log(colltotal);
                 // req.flash('success_msg', 'Collateral Total is ' + colltotal) ;

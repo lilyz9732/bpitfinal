@@ -189,7 +189,7 @@ router.get('/clientagreement', function(req, res){
 });
 
 router.post('/underwater', function(req, res){
-	
+
 })
 
 // POST to client agreement page
@@ -305,6 +305,38 @@ router.post('/lenderindex', function(req, res){
 })
 
 router.post('/brokerindex', function(req, res){
+	var firstName = req.body.firstName;
+	var lastName = req.body.lastName;
+	var cashvalue = req.body.cashvalue;
+	var cashmargin = req.body.cashmargin;
+	var equityvalue = req.body.equityvalue;
+	var equitymargin = req.body.equitymargin;
+	var businessvalue = req.body.businessvalue;
+	var businessmargin = req.body.businessmargin;
+	var landvalue = req.body.landvalue;
+	var landmargin = req.body.landmargin;
+	var loanvalue = req.body.loanvalue;
+
+	// Validation
+	req.checkBody('firstName', 'firstName is required').notEmpty();
+	req.checkBody('lastName', 'lastName is required').notEmpty();
+	req.checkBody('cashvalue', 'cashvalue is not valid').notEmpty();
+	req.checkBody('cashmargin', 'cashmargin is required').notEmpty();
+	req.checkBody('equityvalue', 'equityvalue is required').notEmpty();
+	req.checkBody('equitymargin', 'equitymargin is required').notEmpty();
+	req.checkBody('businessmargin', 'businessmargin is required').notEmpty();
+	req.checkBody('businessvalue', 'businessvalue is required').notEmpty();
+	req.checkBody('landmargin', 'landmargin is required').notEmpty();
+	req.checkBody('landvalue', 'landvalue is required').notEmpty();
+	req.checkBody('loanvalue', 'loanvalue is required').notEmpty();
+
+	var errors = req.validationErrors();
+
+	if(errors){
+		res.render('brokerindex',{
+			errors:errors
+		});
+	} else {
   	Promise.all([
     
     // snippet create-key
@@ -353,6 +385,14 @@ router.post('/brokerindex', function(req, res){
     }),
     // endsnippet
     
+    // snippet create-asset: total collateral
+    client.assets.create({
+      alias: 'LOAN VALUE',
+      rootXpubs: [aliceKey],
+      quorum: 1,
+    }),
+    // endsnippet
+
     // snippet create-account
     client.accounts.create({
       alias: req.body.firstName + " " + req.body.lastName,
@@ -362,8 +402,7 @@ router.post('/brokerindex', function(req, res){
     // endsnippet
 ])).then(() => 
 
-    //TRANSACTIONS:
-    //Putting the first stock on the ledger
+    // Issuing assets
     client.transactions.build(builder => {
         builder.issue({
             assetAlias: 'CASH',
@@ -372,7 +411,11 @@ router.post('/brokerindex', function(req, res){
         builder.controlWithAccount({
             accountAlias: req.body.firstName + " " + req.body.lastName,
             assetAlias: 'CASH',
-            amount: parseInt(req.body.cashvalue) * parseInt(req.body.cashmargin) * 0.01
+            amount: parseInt(req.body.cashvalue) * parseInt(req.body.cashmargin) * 0.01,
+            reference_data: {
+		      	client: req.body.firstName + " " + req.body.lastName,
+		      	asset: 'CASH',
+            }
         })
     })
     .then(issuance => signer.sign(issuance))
@@ -388,7 +431,11 @@ router.post('/brokerindex', function(req, res){
         builder.controlWithAccount({
             accountAlias: req.body.firstName + " " + req.body.lastName,
             assetAlias: 'EQUITY',
-            amount: parseInt(req.body.equityvalue) * parseInt(req.body.equitymargin) * 0.01
+            amount: parseInt(req.body.equityvalue) * parseInt(req.body.equitymargin) * 0.01,
+            reference_data: {
+		      	client: req.body.firstName + " " + req.body.lastName,
+		      	asset: 'EQUITY',
+            }
         })
     })
     .then(issuance => signer.sign(issuance))
@@ -404,7 +451,11 @@ router.post('/brokerindex', function(req, res){
         builder.controlWithAccount({
             accountAlias: req.body.firstName + " " + req.body.lastName,
             assetAlias: 'REAL ESTATE',
-            amount: parseInt(req.body.landvalue) * parseInt(req.body.landmargin) * 0.01
+            amount: parseInt(req.body.landvalue) * parseInt(req.body.landmargin) * 0.01,
+            reference_data: {
+		      	client: req.body.firstName + " " + req.body.lastName,
+		      	asset: 'REAL ESTATE',
+            }
         })
     })
     .then(issuance => signer.sign(issuance))
@@ -420,7 +471,31 @@ router.post('/brokerindex', function(req, res){
         builder.controlWithAccount({
             accountAlias: req.body.firstName + " " + req.body.lastName,
             assetAlias: 'BUSINESS ASSETS',
-            amount: parseInt(req.body.businessvalue) * parseInt(req.body.businessmargin) * 0.01
+            amount: parseInt(req.body.businessvalue) * parseInt(req.body.businessmargin) * 0.01,
+            reference_data: {
+		      	client: req.body.firstName + " " + req.body.lastName,
+		      	asset: 'BUSINESS ASSETS',
+            }
+        })
+    })
+    .then(issuance => signer.sign(issuance))
+    .then(signed => client.transactions.submit(signed))})
+    .then(() => {
+
+    //Putting the second stock on the ledger
+    client.transactions.build(builder => {
+        builder.issue({
+            assetAlias: 'LOAN VALUE',
+            amount: parseInt(req.body.loanvalue)
+        })
+        builder.controlWithAccount({
+            accountAlias: req.body.firstName + " " + req.body.lastName,
+            assetAlias: 'LOAN VALUE',
+            amount: parseInt(req.body.loanvalue),
+            reference_data: {
+		      	client: req.body.firstName + " " + req.body.lastName,
+		      	asset: 'LOAN VALUE',
+            }
         })
     })
     .then(issuance => signer.sign(issuance))
@@ -432,7 +507,7 @@ router.post('/brokerindex', function(req, res){
     parseInt(req.body.landvalue) * parseInt(req.body.landmargin) + 
     parseInt(req.body.businessvalue) * parseInt(req.body.businessmargin)) * 0.01
 
-    //Putting the second stock on the ledger
+    // issuing total collateral value
     client.transactions.build(builder => {
         builder.issue({
             assetAlias: 'TOTAL COLLATERAL',
@@ -441,7 +516,11 @@ router.post('/brokerindex', function(req, res){
         builder.controlWithAccount({
             accountAlias: req.body.firstName + " " + req.body.lastName,
             assetAlias: 'TOTAL COLLATERAL',
-            amount: total
+            amount: total,
+            reference_data: {
+		      	client: req.body.firstName + " " + req.body.lastName,
+		      	asset: 'TOTAL COLLATERAL'
+            }
         })
     })
     .then(issuance => signer.sign(issuance))
@@ -449,9 +528,9 @@ router.post('/brokerindex', function(req, res){
   .catch(err =>
   process.nextTick(() => {throw err })
   )
-  req.flash('success_msg', 'You have logged an asset');
+  req.flash('success_msg', 'You have sucessfully added/updated ' + req.body.firstName + "'s account");
   res.redirect('/brokerindex')
-});
+}});
 
 router.get('/logout', function(req, res){
 	req.logout();
