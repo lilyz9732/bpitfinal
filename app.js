@@ -162,7 +162,7 @@ app.post('/upload', function(req, res) {
                                   res.redirect('/brokerindex');
                                 }
                                 else {
-                                  req.flash('error_msg', 'Warning: ' + result[i].stocks + "'s Collateral is $" + (loan.amount - colltotal) + ' underwater');
+                                  req.flash('error_msg', "Warning: Collateral is $" + (loan.amount - colltotal) + ' underwater');
                                   res.redirect('/brokerindex');
                                 }
                               })
