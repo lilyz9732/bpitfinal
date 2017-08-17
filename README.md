@@ -55,15 +55,15 @@ C) CHAIN-CORE
 C.1) Install ChainCore from https://chain.com/technology/
 
 C.2) To Start a new Blockchain:
--Run the chaincore app 
--Click on "Create new new Blockchain network" 
--Share the Blockchain ID  with peer: 
+  - Run the chaincore app 
+  - Click on "Create new new Blockchain network" 
+  - Share the Blockchain ID  with peer: 
 ```
 Navigate to Settings on top right
 Click on Core Status 
 Copy Blockchain ID and share with peer
 ```
--share the Client Token with peer:
+  - share the Client Token with peer:
 ```
 Navigate to Settings on top right
 Click on Acces Control 
@@ -73,7 +73,7 @@ Name the token
 Copy the token and share with peer
 ```
 
--share the Generator URL, which will be as follows:
+  - share the Generator URL, which will be as follows:
 ```
 http://localhost:1999
 
@@ -84,11 +84,11 @@ http://localhost:1999
 ```
 
 C.3) To join an existing Blockchain:
--Run the chaincore app 
--click on "Join an existing Blockchain Network" 
--Enter the Generator URL
--Enter the Blockchain ID
--Enter the Token
+  - Run the chaincore app 
+  - click on "Join an existing Blockchain Network" 
+  - Enter the Generator URL
+  - Enter the Blockchain ID
+  - Enter the Token
 
 NOTE: If you run into trouble with, you can contact the support staff at chain.slack.com
 
