@@ -5,7 +5,6 @@ Blockchain Collateral Implemenation
 ### Installation
 
 A) NODE & NPM                 
-
 A.1) Download Node.js and NPM from https://nodejs.org/en/
 A.2) To check if you have Node.js installed, run this command in your terminal:
 ```
@@ -89,10 +88,9 @@ C.3) To join an existing Blockchain:
 -Enter the Token
 
 
-\n
+
 
 D) RUN 
-\n
 D.1 In another terminal, navigate to the code folder 
 D.2 Run the following code, which open a connection on port 3000:
 ```
