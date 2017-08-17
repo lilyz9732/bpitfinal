@@ -23,34 +23,69 @@ This will install all the dependencies in your application
 
 
 
-B) MONGODB
-  B.1) Download and Install mongodb from https://docs.mongodb.com/manual/installation/
-  B.2) Run mongodb server connection:
-          - Make folder to store mongodb data eg. /user/mydbfolder
-          - Run mongodob by specifying path:
-          ```
-          mongod --dbpath C:/user/mydbfolder
-          ```
 
-  B.3) Run mongo shell:
-        - Open another command prompt/terminal
-        - Start mongo:
-        ```
-        mongo
-        
-        ```
+
+
+B) MONGODB
+B.1) Download and Install mongodb from https://docs.mongodb.com/manual/installation/
+B.2) Run mongodb server connection:
+  - Make folder to store mongodb data eg. /user/mydbfolder
+  - Run mongodob by specifying path:
+```
+mongod --dbpath C:/user/mydbfolder
+```
+B.3) Run mongo shell:
+  - Open another command prompt/terminal
+  - Start mongo:
+```
+mongo        
+```
 
 
 
 
 C) CHAIN-CORE
 
+C.1) Install ChainCore from https://chain.com/technology/
 
+C.2) To Start a new Blockchain:
+-Run the chaincore app 
+-Click on "Create new new Blockchain network" 
+-Share the Blockchain ID  with peer: 
+```
+Navigate to Settings on top right
+Click on Core Status 
+Copy Blockchain ID and share with peer
+```
+
+-share the Client Token with peer:
+```
+Navigate to Settings on top right
+Click on Acces Control 
+Cick on New Token
+Select Cross-Core token
+Name the token
+Copy the token and share with peer
+```
+
+-share the Generator URL, which will be as follows:
+```
+http://localhost:1999
+```
+Replace localhost with your IP address 
+
+
+
+C.3) To join an existing Blockchain:
+-Run the chaincore app 
+-click on "Join an existing Blockchain Network" 
+-Enter the Generator URL
+-Enter the Blockchain ID
+-Enter the Token
 
 
 
 D) RUN 
-
 7.1 In another terminal, navigate to the code folder 
 7.2 Run the following code, which open a connection on port 3000:
 ```
