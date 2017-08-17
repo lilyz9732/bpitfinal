@@ -10,7 +10,7 @@ A.2) To check if you have Node.js installed, run this command in your terminal:
 ```
 node -v
 ```
- A.3)To confirm that you have npm installed you can run this command in your terminal:
+A.3)To confirm that you have npm installed you can run this command in your terminal:
 ```
 npm -v
 ```
@@ -46,7 +46,6 @@ mongo
 C) CHAIN-CORE
 
 C.1) Install ChainCore from https://chain.com/technology/
-
 C.2) To Start a new Blockchain:
 -Run the chaincore app 
 -Click on "Create new new Blockchain network" 
@@ -56,7 +55,6 @@ Navigate to Settings on top right
 Click on Core Status 
 Copy Blockchain ID and share with peer
 ```
-
 -share the Client Token with peer:
 ```
 Navigate to Settings on top right
@@ -76,10 +74,6 @@ http://localhost:1999
 *The IP address Class A should be 192 or 192
 *All parties should be on the same network
 ```
-
-
-
-
 C.3) To join an existing Blockchain:
 -Run the chaincore app 
 -click on "Join an existing Blockchain Network" 
