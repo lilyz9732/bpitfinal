@@ -5,6 +5,7 @@ Blockchain Collateral Implemenation
 ### Installation
 
 A) NODE & NPM                 
+
 A.1) Download Node.js and NPM from https://nodejs.org/en/
 
 A.2) To check if you have Node.js installed, run this command in your terminal:
@@ -29,6 +30,7 @@ This will install all the dependencies in your application
 
 
 B) MONGODB
+
 B.1) Download and Install mongodb from https://docs.mongodb.com/manual/installation/
 
 B.2) Run mongodb server connection:
@@ -92,6 +94,7 @@ C.3) To join an existing Blockchain:
 
 
 D) RUN 
+
 D.1 In another terminal, navigate to the code folder 
 
 D.2 Run the following code, which open a connection on port 3000:
