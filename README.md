@@ -30,12 +30,14 @@ This will install all the dependencies in your application
 
 B) MONGODB
 B.1) Download and Install mongodb from https://docs.mongodb.com/manual/installation/
+
 B.2) Run mongodb server connection:
   - Make folder to store mongodb data eg. /user/mydbfolder
   - Run mongodob by specifying path:
 ```
 mongod --dbpath C:/user/mydbfolder
 ```
+
 B.3) Run mongo shell:
   - Open another command prompt/terminal
   - Start mongo:
@@ -49,6 +51,7 @@ mongo
 C) CHAIN-CORE
 
 C.1) Install ChainCore from https://chain.com/technology/
+
 C.2) To Start a new Blockchain:
 -Run the chaincore app 
 -Click on "Create new new Blockchain network" 
@@ -77,6 +80,7 @@ http://localhost:1999
 *The IP address Class A should be 192 or 192
 *All parties should be on the same network
 ```
+
 C.3) To join an existing Blockchain:
 -Run the chaincore app 
 -click on "Join an existing Blockchain Network" 
@@ -89,10 +93,12 @@ C.3) To join an existing Blockchain:
 
 D) RUN 
 D.1 In another terminal, navigate to the code folder 
+
 D.2 Run the following code, which open a connection on port 3000:
 ```
 npm start
 ```
+
 D.3 In a browser, surf to:
 ```
 http://localhost:3000
