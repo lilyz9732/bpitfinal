@@ -4,24 +4,70 @@ Blockchain Collateral Implemenation
 
 ### Installation
 
-BPIT Code requires [Node.js](https://nodejs.org/) v4+ to run.
-1) Go into your folder
-```sh
-$ npm install
+
+
+A) NODE & NPM 
+
+1) BPIT Code requires Node.js v4+ to run. Download Node.js and NPM:
 ```
-2) Download mongodb.
-3) Start your mongodb by specifying the path: ```sh
-$ mongod --dbpath C:/Users/_USERPROFILE_/Desktop/bpitfinal/data
+https://nodejs.org/en/
 ```
-4) In another command prompt/terminal, go into your mongodb bin folder and then start mongo: ```sh
-$ mongo
+To check if you have Node.js installed, run this command in your terminal:
 ```
-Then switch db to login: ```sh
-$ use loginapp
+node -v
 ```
-5) In another command prompt/terminal, go into your bpitfinal folder: ```sh
-$ npm start
+To confirm that you have npm installed you can run this command in your terminal:
+```
+npm -v
 ```
 
-6) Connection would have started on port 3000, open browser: localhost:3000
+2) Go into your code folder and run:
+```
+npm install
+```
+This will install all the dependencies in your application 
 
+
+
+B) MONGODB
+
+3) Download and Install mongodb:
+```
+https://docs.mongodb.com/manual/installation/
+```
+
+4) Run mongodb server connection:
+
+4.1 Make folder to store mongodb data eg. /user/mydbfolder
+4.2 Run mongodob by specifying path:
+```
+mongod --dbpath C:/user/mydbfolder
+```
+
+5) Run mongo shell:
+5.1 Open another command prompt/terminal
+5.2 Start mongo:
+```
+mongo
+```
+
+
+
+
+C) CHAIN-CORE
+
+
+
+
+
+D) RUN 
+
+7.1 In another terminal, navigate to the code folder 
+7.2 Run the following code, which open a connection on port 3000:
+```
+npm start
+```
+7.3 In a browser, surf to:
+```
+http://localhost:3000
+```
