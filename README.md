@@ -71,8 +71,13 @@ Copy the token and share with peer
 -share the Generator URL, which will be as follows:
 ```
 http://localhost:1999
+
+
+*Replace localhost with your IP address
+*The IP address Class A should be 192 or 192
+*All parties should be on the same network
 ```
-Replace localhost with your IP address 
+
 
 
 
@@ -84,8 +89,10 @@ C.3) To join an existing Blockchain:
 -Enter the Token
 
 
+\n
 
 D) RUN 
+\n
 D.1 In another terminal, navigate to the code folder 
 D.2 Run the following code, which open a connection on port 3000:
 ```
@@ -95,4 +102,7 @@ D.3 In a browser, surf to:
 ```
 http://localhost:3000
 ```
+
+
+NOTE: To look at screenshots, view blockchainscreenshots.pdf in this folder  
 
