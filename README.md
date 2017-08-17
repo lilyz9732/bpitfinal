@@ -86,12 +86,12 @@ C.3) To join an existing Blockchain:
 
 
 D) RUN 
-7.1 In another terminal, navigate to the code folder 
-7.2 Run the following code, which open a connection on port 3000:
+D.1 In another terminal, navigate to the code folder 
+D.2 Run the following code, which open a connection on port 3000:
 ```
 npm start
 ```
-7.3 In a browser, surf to:
+D.3 In a browser, surf to:
 ```
 http://localhost:3000
 ```
