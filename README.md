@@ -5,11 +5,11 @@ Blockchain Collateral Implemenation
 ### Installation
 
 A) NODE & NPM 
-  A.1) Download Node.js and NPM from https://nodejs.org/en/
-  A.2) To check if you have Node.js installed, run this command in your terminal:
-    ```
+A.1) Download Node.js and NPM from https://nodejs.org/en/
+A.2) To check if you have Node.js installed, run this command in your terminal:
+```
     node -v
-    ```
+```
   A.3)To confirm that you have npm installed you can run this command in your terminal:
     ```
     npm -v
