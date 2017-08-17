@@ -79,7 +79,7 @@ http://localhost:1999
 
 
 *Replace localhost with your IP address
-*The IP address Class A should be 192 or 192
+*The IP address Class A should be 192 or 172
 *All parties should be on the same network
 ```
 
@@ -90,14 +90,13 @@ C.3) To join an existing Blockchain:
 -Enter the Blockchain ID
 -Enter the Token
 
-
-
+NOTE: If you run into trouble with, you can contact the support staff at chain.slack.com
 
 D) RUN 
 
 D.1 In another terminal, navigate to the code folder 
 
-D.2 Run the following code, which open a connection on port 3000:
+D.2 Run the following code, which opens a connection on port 3000:
 ```
 npm start
 ```
